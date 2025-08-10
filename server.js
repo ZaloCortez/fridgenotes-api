@@ -71,6 +71,9 @@ if (serviceAccount) {
 app.use(cors());
 app.use(express.json());
 
+// health check endpoint
+app.get('/healthz', (req, res) => { res.status(200).send('OK') });
+
 mongoose.connect(MONGODB_URI)
     .then(() => console.log('Connected to MongoDB Atlas.'))
     .catch(err => console.error('Could not connect to MongoDB:', err));
