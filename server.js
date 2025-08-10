@@ -6,6 +6,7 @@ const cors = require('cors');
 const admin = require('firebase-admin');
 
 const notesRouter = require('./routes/notes');
+const userRouter = require('./routes/user');
 const authenticate = require('./middleware/auth');
 
 const app = express();
@@ -35,6 +36,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/notes', authenticate, notesRouter);
+app.use('/api/users', userRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

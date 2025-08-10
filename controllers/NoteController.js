@@ -28,7 +28,7 @@ exports.createNote = async (req, res) => {
         });
 
         const savedNote = await newNote.save();
-        res.status(201).json(savedNote); // 201 created status
+        res.status(201).json(savedNote);
 
     } catch (error) {
         console.error('Error creating note:', error);
