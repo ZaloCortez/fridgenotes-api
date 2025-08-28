@@ -5,6 +5,10 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const admin = require('firebase-admin');
 
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
+
 const path = require('path');
 const fs = require('fs');
 
@@ -82,6 +86,8 @@ mongoose.connect(MONGODB_URI)
 app.get('/', (req, res) => {
     res.send('Welcome to the FridgeNotes API!');
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/notes', authenticate, notesRouter);
 app.use('/api/users', userRouter);

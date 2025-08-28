@@ -1,0 +1,237 @@
+openapi: 3.0.0
+info:
+  title: Fridgenotes API
+  description: A simple API for managing sticky notes on a virtual fridge, with task notifications.
+  version: 1.0.0
+  contact:
+    name: API Support
+    url: https://github.com/ZaloCortez/fridgenotes-api
+
+servers:
+  - url: https://fridgenotes-api.onrender.com/
+    description: Live production server
+
+tags:
+  - name: Notes
+    description: Operations related to managing notes
+
+paths:
+  /api/notes:
+    get:
+      tags:
+        - Notes
+      summary: Get all notes
+      description: Retrieves a list of all notes from the database.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Note'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - Notes
+      summary: Create a new note
+      description: Creates a new note and saves it to the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteInput'
+      responses:
+        '201':
+          description: Note created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '400':
+          description: Bad Request (e.g., validation error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/notes/{id}:
+    put:
+      tags:
+        - Notes
+      summary: Update a note by ID
+      description: Updates a specific note identified by its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The MongoDB ObjectID of the note to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteUpdateInput'
+      responses:
+        '200':
+          description: Note updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Note'
+        '404':
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Notes
+      summary: Delete a note by ID
+      description: Deletes a specific note from the database.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The MongoDB ObjectID of the note to delete.
+      responses:
+        '200':
+          description: Note deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Note deleted successfully"
+        '404':
+          description: Note not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Note:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "6677a4b7c8a12b34567890ab"
+        title:
+          type: string
+          example: "Buy Milk"
+        content:
+          type: string
+          example: "Get 2% milk"
+        dueDate:
+          type: string
+          format: date-time
+          example: "2024-06-25T10:00:00.000Z"
+        isCompleted:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-06-22T15:45:27.123Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-06-22T15:45:27.123Z"
+        __v:
+          type: integer
+          example: 0
+      required:
+        - _id
+        - title
+        - content
+        - isCompleted
+        - createdAt
+        - updatedAt
+
+    NoteInput:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "New Note"
+        content:
+          type: string
+          example: "This is a new note content."
+        dueDate:
+          type: string
+          format: date-time
+          example: "2024-06-25T10:00:00.000Z"
+        isCompleted:
+          type: boolean
+          example: false
+      required:
+        - title
+        - content
+
+    NoteUpdateInput:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Updated Note Title"
+        content:
+          type: string
+          example: "Updated content."
+        dueDate:
+          type: string
+          format: date-time
+          example: "2024-06-26T12:00:00.000Z"
+        isCompleted:
+          type: boolean
+          example: true
+      # All fields are optional for an update
+      # required: []
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Error message describing what went wrong."
