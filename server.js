@@ -22,7 +22,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 // Firebase Admin SDK initialization
 let serviceAccount;
-const firebaseConfigFileName = 'fridgenotes-9786b-firebase-adminsdk-fbsvc-f3ee5f9de1.json'; // Your specific Firebase JSON filename
+const firebaseConfigFileName = 'fridgenotes-9786b-firebase-adminsdk-fbsvc-f3ee5f9de1.json';
 
 // Check if running in a Render-like environment where secret files are mounted
 // Render typically mounts secret files to /etc/secrets/
@@ -87,8 +87,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to the FridgeNotes API!');
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
+|app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/notes', authenticate, notesRouter);
 app.use('/api/users', userRouter);
 
