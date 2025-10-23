@@ -87,7 +87,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to the FridgeNotes API!');
 });
 
-|app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/notes', authenticate, notesRouter);
 app.use('/api/users', userRouter);
 
